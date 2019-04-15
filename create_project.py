@@ -81,6 +81,39 @@ class CreateNewProject:
                 f.writelines(project_info)
 
         return True
+        
+    def create_test_project(self):
+        """
+        创建数据分析工程目录
+        """
+        _format = lambda x: x.format(self.project)
+
+        paths = [
+            r"./{}/bin/",
+            r"./{}/lib/"]
+        for path in paths:
+            os.makedirs(_format(path))
+
+        files = [
+            r"./{}/__init__.py",
+            r"./{}/main.py",
+            r"./{}/bin/foo.py",
+            r"./{}/bin/__init__.py",
+            r"./{}/lib/__init__.py",
+            r"./{}/lib/config.py"]
+        local_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        project_info = [
+            "# encoding: utf-8\n",
+            '"""\n'
+            "@author: {}\n".format(self.author),
+            "@contact: {}\n".format(self.email),
+            "@time: {}\n".format(local_time),
+            '"""']
+        for file in files:
+            with open(_format(file), 'w', encoding='utf-8') as f:
+                f.writelines(project_info)
+
+        return True
 
     def show_project(self, path, depth=0):
         """
@@ -102,6 +135,8 @@ class CreateNewProject:
         build_flag = False
         if self.type == 1:
             build_flag = self.create_data_analysis_project()
+        elif self.type == 2:
+            build_flag = self.create_test_project()
         if build_flag:
             print("成功生成工程\n\n{}".format(self.project))
             self.show_project(self.project_path)
